@@ -19,3 +19,13 @@ code {
     font-weight: 600; 
     font-style: italic; 
 }
+
+img {
+    display: block; 
+    width: 60%; 
+    margin: auto; 
+}
+
+.last { 
+    float: right;
+}
