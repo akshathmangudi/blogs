@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/main.css">
+    </head>
+    <body>
+        <a href="../src/eps2.html">episode 2</a>
+        <a class="last" href="../index.html">home</a>
+        <h1>what is a convolution?</h1>
+        <p>
+            as an undergraduate student studying computer science, you are definitely required 
+            to take a few math courses during the first three or four semesters, ranging from calculus 
+            to linear algebra and differential equations, and you might've come across something called
+            <strong>convolution theorem</strong> in laplace/z-transforms, which describes the product of said two transforms. 
+            <br><br>
+            in this blog, i will describe a similar definition of convolution, under the context of deep
+            learning, or specifically, convolutional neural networks (CNN).
+            <br><br>
+            databricks.com says: 
+            <br><br>
+            <img src="../assets/conv.png" alt="convolution definition">
+            <br>
+            sounds complicated and demotivating right? let's break it down.  
+        </p>
+        <h2>cool math stuff.</h2>
+        <p>
+            convolution is simply the product of two matrices. one can imagine it as a relation [recall 
+            your jee math stuff], an input set and an output set. a sort of "mapping" is done between these
+            two sets and the result is the output set. 
+            <br><br>
+            <strong>don't take the set example too seriously, it's for your understanding. </strong>
+            <br><br>
+            gif taken from <a href="https://hannibunny.github.io/mlbook/neuralnetworks/convolutionDemos.html">here</a>.
+            <img class="too-large" src="../assets/convolution.gif" alt="convolution gif">
+            <br>
+            consider the 'blue' matrix as the input matrix, and the 'green' as something known as a filter/kernel.
+        </p>
+        <h2>definition time.</h2>
+        <p>
+            <li>
+                <ul><strong>filter/kernel</strong>: a matrix that simply performs a transformation.</ul>
+                <ul><strong>padding</strong>: acts as a boundary surrounding the input matrix.</ul>
+                <ul><strong>stride</strong>: how far of a jump does a kernel make after each operation.</ul>
+            </li>
+            <h3>why do these definitions matter?</h3>
+            the input matrix, performs something called "element-wise multiplication" with the kernel in order to yield
+            each element of the output matrix. this is different from the usual matrix multiplication done that involves a 
+            cross-product, where the rows of the input matrix is multipled with the columns of the kernel and is summed in the end. 
+            <br><br>
+            there is a certain window within the input matrix that acts as a sub-matrix, and this window has the same dimensions
+            as the kernel and each element of the window matrix is multiplied with each corresponding window of the kernel, and is finally
+            summed up in the end, giving the first element of the output matrix. 
+            <br><br>
+            though this article might be a bit mathy, it might help you understand it properly: <a href="https://medium.com/linear-algebra/part-14-dot-and-hadamard-product-b7e0723b9133">article</a>.
+        </p>
+        <h2>buzzwords and putting it all together.</h2>
+        <p>
+            when you came across convolutional neural networks, you might've come across something called <strong>downsampling</strong>, 
+            <strong>upsampling</strong>, etc. what it means is that: 
+            <li>
+                <ul><strong>upsampling</strong> expands the output to something larger than the input space (deconvolution for example)</ul>
+                <ul><strong>downsampling</strong> compresses the input to something smaller. (convolution)</ul>
+            </li>
+            <h3>where is convolution used?</h3>
+            mostly in image classification use-cases, these kernels actually have a special property: they contain information on the edges, 
+            and shapes. for example, if you are trying to classify a ball and a bat, then the kernel might have information on the edges of these objects
+            and as the kernel is applied to the input matrix, the output matrix will contain information on the edges as well.
+            <pre>
+                <code>
+                    kernel = [[1, 0, -1], 
+                              [1, 0, -1], 
+                              [1, 0, -1]]
+                </code>
+            </pre>
+            contains information on the "vertical edges" to pass through the input matrix, whereas a kernel like: 
+            <pre>
+                <code>
+                    kernel = [[1, 1, 1], 
+                              [0, 0, 0], 
+                              [-1, -1, -1]]
+                </code>
+            </pre>
+            contains information on the "horizontal edges" to pass through. 
+            <br><br>
+            in reality however, these kernels are more complicated and through each layer, there's a different kernel that contains 
+            information on simple shapes, but as the layers increase, the model learns information and more complicated information, thanks to convolution.
+            <br><br>
+            the output equation is defined as follows: <strong>((input_dim + 2 * padding - kernel) // stride) + 1</strong>
+            <br><br>
+            libraries like <code>tensorflow</code> or <code>torch</code> already provide convolution layers that could be implemented without doing so from 
+            scratch. however, it is important to get an understanding of how convolution works by understanding the math behind it. 
+            <br><br>
+            convolution layers can be extended from lists to tensors. 2d convolution are the most commonly used layers for image processing
+            but for certain cases in the medical sector or video-processing, one might require to use 3d convolutions for that matter.  
+        </p>
+        <h2>how do i code this?</h2>
+        <p>
+            taken from <a href="https://github.com/akshathmangudi/from-scratch/blob/main/src/conv.py" src="github repo">here</a>.
+            <br><br>
+            one can define a 2d convolution for example using just numpy, like so: 
+            <pre>
+                <code>
+import numpy
+
+class Conv2D: 
+    def __init__(self, kernel: numpy.ndarray, stride: int, padding: int) -> None: 
+        self.kernel = kernel
+        self.stride = stride
+        self.padding = padding
+
+    def forward(self, in_matrix: numpy.ndarray) -> numpy.ndarray: 
+        i_w, i_h = in_matrix.shape
+        k_w, k_h = self.kernel.shape
+
+        padded_input = numpy.pad(in_matrix, ((self.padding, self.padding), (self.padding, self.padding)), mode="constant", constant_values=0)
+
+        o_h = ((i_h + 2*self.padding - k_h) // self.stride) + 1
+        o_w = ((i_w + 2*self.padding - k_w) // self.stride) + 1
+
+        out_matrix = numpy.ones((o_w, o_h))
+
+        for i in range(o_w): 
+            for j in range(o_h):
+                o_i = i * self.stride
+                o_j = j * self.stride
+
+                i_end = o_i + len(self.kernel)
+                j_end = o_j + len(self.kernel)
+
+                sub_matrix = padded_input[o_i:i_end, o_j:j_end]
+                out_matrix[i, j] = numpy.sum(numpy.multiply(sub_matrix, self.kernel))
+
+        return out_matrix
+                </code>
+            </pre>
+            you can take a look at my other pieces of code which i have written out in the repository linked above.
+        </p>
+        <h2>resources</h2>
+        <p>
+            <li>
+                <ul>gifs for convolution and deconvolution: <a href="https://hannibunny.github.io/mlbook/neuralnetworks/convolutionDemos.html">here</a>.</ul>
+                <ul>no one explains convolution better than this guy: <a href="https://www.youtube.com/watch?v=Etksi-F5ug8&t=324s">krish naik</a>.</ul>
+            </li>
+        </p>
+    </body>
+    <footer>
+        <p>thanks for reading.</p>
+    </footer>
+</html>

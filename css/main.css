@@ -29,3 +29,9 @@ img {
 .last { 
     float: right;
 }
+
+.too-large {
+    display: block;
+    width: 20%;
+    margin: auto;
+}
