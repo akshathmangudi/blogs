@@ -11,7 +11,7 @@
     <body>
         <a href="../src/eps3.html">episode 3</a>
         <a class="last" href="../index.html">home</a>
-        <h1>running large llms on potato pcs</h1>
+        <h1>running large models on potato pcs</h1>
         <p>
             as you set out to become the best deep learning engineer or whatever 
             you plan on doing so in the field, there will be a desire to run these large
@@ -19,8 +19,8 @@
             you might not be able to do so. your hopes of running llama3-405b just went down the
             gutter :P 
             <br><br>
-            however, there is a solution. though you might not hvae access to a A100 collecting
-            dust in your attic, what you could do is to <strong>quantize</strong> the llms you're
+            however, there is a solution. though you might not have access to a A100 collecting
+            dust in your attic, what you could do is to <strong>quantize</strong> the models you're
             trying to run and pray that it works.
         </p>
         <h2>but wait, what is quantization?</h2>
@@ -45,7 +45,7 @@
             70,000,000,000 (70 billion) x 4 bytes per param: 280,000,000,000 bytes (or) 280 GB of memory/vram 
             of the GPU. 
             <br><br>
-            this, is a HUGE amount. good luck trying to find the moeny to fund yourself for that. but this is where
+            this, is a HUGE amount. good luck trying to find the money to fund yourself for that. but this is where
             quantization comes into the picture. 
             <br><br>
             with quantization, we can basically tradeoff a bit of accuracy for precision, so we can convert it from 
@@ -65,8 +65,8 @@
                 <li>quantization-aware training (qat)</li>
             </ul>
 
-            <strong>post-training quantization</strong> as the name suggests, quantizes the llm after training is complete. 
-            this is the cheapest way to quantize an llm, but it is also more prone to loss of accuracy. 
+            <strong>post-training quantization</strong> as the name suggests, quantizes the model after training is complete. 
+            this is the cheapest way to quantize a model, but it is also more prone to loss of accuracy. 
             <strong>quantization-aware training</strong> integrates the quantization process within training itself, this has a 
             loss function of its own and post-training, weights will already be quantized with the least loss in accuracy. 
             <br><br>
@@ -78,7 +78,7 @@
 
             <ul>
                 <li>
-                    qlora (quantized low-rank adaptation) is a technique where the original weights of the base llm are quantized to 4-bit
+                    qlora (quantized low-rank adaptation) is a technique where the original weights of the base model are quantized to 4-bit
                     to run it on a single GPU.
                 </li>
                 <li>
@@ -86,7 +86,7 @@
                     of the output error and tries to minimize it.
                 </li>
                 <li>
-                    ggml/uf is a quantization technique and a model format to be stored, such that llms can be run on CPUs, as opposed to needing
+                    ggml/uf is a quantization technique and a model format to be stored, such that models can be run on CPUs, as opposed to needing
                     GPUs.
                 </li>
                 <li>
@@ -99,12 +99,12 @@
             notes and resources.
         </h2>
         <p>
-            so now that you know a little bit as to how quantization works, you could try quantizing an llm yourself and be happy about 
-            the fact that you can run larger llms on your computer without spending thousands on acquiring a gpu. 
+            so now that you know a little bit as to how quantization works, you could try quantizing a model yourself and be happy about 
+            the fact that you can run larger models on your computer without spending thousands on acquiring a gpu. 
 
             <ul>
                 <li>more on quantization: <a href="https://huggingface.co/docs/transformers/main/en/quantization/overview">huggingface</a></li>
-                <li>how to quantize llms: <a href="https://www.tensorops.ai/post/what-are-quantized-llms">quantization</a></li>
+                <li>how to quantize models: <a href="https://www.tensorops.ai/post/what-are-quantized-models">quantization</a></li>
             </ul>
         </p>
     </body>
